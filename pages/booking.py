@@ -43,10 +43,7 @@ duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(da
 
 hourly_rate = 125
 
-def calculate_price(duration_hours, num_workers):
-    return num_workers * duration_hours * hourly_rate
-    
-total_price = calculate_price(duration_hours, num_workers)
+total_price = hourly_rate * num_workers * duration_hours
 deposit = total_price * 0.4
 
 st.markdown(f"**Total Price:** ${total_price:.2f}")
@@ -61,6 +58,3 @@ if st.button("Submit Booking Request"):
        
 
         # Here is where you could add code to send an email or text in the future
-
-        
-
