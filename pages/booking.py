@@ -41,11 +41,13 @@ st.header("Price Summary")
 num_workers = num_painters + num_balloon
 duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(date.today(), start_time)).seconds / 3600
 
-total_price = 0
-deposit = 0
 hourly_rate = 125
 
-total_price = duration_hours * num_workers * hourly_rate
+def calculate_price(duration_hours, num_workers):
+    return num_workers * duration_hours * hourly_rate
+    
+total_price = calculate_price(duration_hours, num_workers)
+deposit = total_price * 0.4
 
 st.markdown(f"**Total Price:** ${total_price:.2f}")
 st.markdown(f"**Deposit Required:** ${deposit:.2f}")
@@ -61,3 +63,4 @@ if st.button("Submit Booking Request"):
         # Here is where you could add code to send an email or text in the future
 
         
+
