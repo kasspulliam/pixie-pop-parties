@@ -35,16 +35,15 @@ customer_phone = st.text_input("Phone Number")
 customer_firstname = st.text_input("First name")
 customer_lastname = st.text_input("Last name")
 
-#time logic
-if duration_hours <= 0:
-    st.error("End time must be after start time.")
-
 # ----- Price Calculation -----
 st.header("Price Summary")
 
 # Calculate total number of workers and hours
 num_workers = num_painters + num_balloon
 duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(date.today(), start_time)).seconds / 3600
+#time logic
+if duration_hours <= 0:
+    st.error("End time must be after start time.")
 
 hourly_rate = 125
 hourly_glitter = 90
@@ -64,4 +63,5 @@ if st.button("Submit Booking Request"):
        
 
         # Here is where you could add code to send an email or text in the future
+
 
