@@ -1,0 +1,6 @@
+[theme]
+primaryColor="#ff69b4" #buttons/highlights
+backgroundColor="#ffe4f2"  #background 
+secondaryBackgroundColor="#ffcce6"  #boxes
+textColor="#000000"  
+font="sans serif"
