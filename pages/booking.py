@@ -43,24 +43,9 @@ duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(da
 
 total_price = 0
 deposit = 0
+hourly_rate = 125
 
-if duration_hours == 2:
-    if num_workers == 1:
-        total_price = 250
-        deposit = 100
-    elif num_workers == 2:
-        total_price = 500
-        deposit = 200
-elif duration_hours == 3:
-    if num_workers == 1:
-        total_price = 280
-        deposit = 112
-    elif num_workers == 2:
-        total_price = 560  # double for 2 workers
-        deposit = 224
-else:
-    total_price = 250 * num_workers * (duration_hours/2)
-    deposit = total_price * 0.4
+total_price = duration_hours * num_workers * hourly_rate
 
 st.markdown(f"**Total Price:** ${total_price:.2f}")
 st.markdown(f"**Deposit Required:** ${deposit:.2f}")
@@ -74,4 +59,5 @@ if st.button("Submit Booking Request"):
        
 
         # Here is where you could add code to send an email or text in the future
+
         
