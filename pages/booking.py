@@ -25,6 +25,7 @@ st.header("Services")
 
 num_painters = st.number_input("Number of Face Painters", min_value=0, max_value=5, value=1, step=1)
 num_balloon = st.number_input("Number of Balloon Twisters", min_value=0, max_value=5, value=0, step=1)
+num_glitter = st.number_input("Number of Glitter Tattoo Artists", min_value=0, max_value=5, value=0, step=1)
 
 # ----- Contact Info -----
 st.header("Contact Information")
@@ -34,6 +35,10 @@ customer_phone = st.text_input("Phone Number")
 customer_firstname = st.text_input("First name")
 customer_lastname = st.text_input("Last name")
 
+#time logic
+if duration_hours <= 0:
+    st.error("End time must be after start time.")
+
 # ----- Price Calculation -----
 st.header("Price Summary")
 
@@ -42,8 +47,9 @@ num_workers = num_painters + num_balloon
 duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(date.today(), start_time)).seconds / 3600
 
 hourly_rate = 125
+hourly_glitter = 90
 
-total_price = hourly_rate * num_workers * duration_hours
+total_price = hourly_rate * num_workers * duration_hours + (num_glitter * duration_hours * hourly_glitter)
 deposit = total_price * 0.4
 
 st.markdown(f"**Total Price:** ${total_price:.2f}")
@@ -58,3 +64,4 @@ if st.button("Submit Booking Request"):
        
 
         # Here is where you could add code to send an email or text in the future
+
