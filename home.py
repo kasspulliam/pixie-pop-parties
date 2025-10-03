@@ -46,7 +46,7 @@ st.header("🌌💫Our Gallery")
 image_files = [
     "images/balloon_parrot.jpg", "images/balloon_spider.jpg", "images/big_balloon_unicorn.jpg", "images/face_paint_darth_maul.jpg",
     "images/face_paint_mermaid.jpg", "images/face_paint_rose_front_face.JPG", "images/face_paint_rose_side face.JPG", "images/face_paint_unicorn.jpg",
-    "images/hulk_face_paint.jpg", "images/rideable_balloon_unicorn.jpg"
+    "images/hulk_face_paint.jpg", "images/rideable_balloon_unicorn.jpg", "images/turtle_paint.jpg", "images/stitch_balloon.jpg"
 ]
 
 #display images in rows of 3
@@ -74,4 +74,5 @@ st.write("""
 3. Deposit to secure your event: Once approved, you will recieve a confirmation email with payment links, total cost, and the cost of the deposit. 
 4. Event day!: We will arrive to the given location 30 minutes (or more depending on the event) before the selected start time to set up. The remaining balance of the total is due the day of the event. 
 5. Sit back and enjoy the party! ✨🪄🥳🦄🎨🎈
+
 """)
