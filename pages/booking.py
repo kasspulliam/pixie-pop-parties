@@ -104,12 +104,12 @@ if st.button("Submit Booking Request"):
         total price: ${total_price:.2f}
         deposit: ${deposit:.2f}
 
-        to approve, reply with: APPROVE {customer_email}
-        to deny, reply with: DENY {customer_email}
+        The admin will review your request and send confirmation shorly.
         """
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
