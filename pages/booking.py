@@ -66,6 +66,7 @@ duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(da
 if duration_hours <= 0:
     st.error("End time must be after start time.")
 else:
+    pass
     #proceeds with total price calulation 
 
 hourly_rate = 125
@@ -108,6 +109,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
