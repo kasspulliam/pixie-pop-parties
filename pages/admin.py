@@ -47,7 +47,7 @@ if not st.session_state.logged_in:
     if st.button("Login"):
         if password_input == ADMIN_PASSWORD:
             st.session_state.logged_in = True
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Incorrect password.")
     st.stop()
@@ -79,7 +79,7 @@ else:
                     "Booking Approved",
                     f"Hi {booking['first_name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
                 )
-                st.experimental_rerun()
+                st.rerun()
 
             if col2.button("❌ Deny", key=f"deny_{idx}"):
                 booking["status"] = "denied"
@@ -89,4 +89,4 @@ else:
                     "Booking Denied",
                     f"Hi {booking['first_name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
                 )
-                st.experimental_rerun()
+                st.rerun()
