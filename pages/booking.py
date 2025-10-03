@@ -19,7 +19,7 @@ SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 
-def send_email(to_email, subject, contant):
+def send_email(to_email, subject, content):
     message = Mail(
         from_email=SENDER_EMAIL,
         to_emails=to_email,
@@ -27,7 +27,7 @@ def send_email(to_email, subject, contant):
         plain_text_content=content
     )
     try:
-        sg = SendGridAPIClient(SENDGRID_APT_KEY)
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
         sg.send(message)
     except Exception as e:
         st.error(f"Error sending email: {e}")
@@ -65,6 +65,8 @@ duration_hours = (datetime.combine(date.today(), end_time) - datetime.combine(da
 #time logic
 if duration_hours <= 0:
     st.error("End time must be after start time.")
+else:
+    #proceeds with total price calulation 
 
 hourly_rate = 125
 hourly_glitter = 90
@@ -106,6 +108,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
