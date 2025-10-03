@@ -3,6 +3,8 @@ from datetime import datetime, date, time, timedelta
 import os
 import smtplib
 from email.message import EmailMessage
+import json
+import os
 
 #if the user clicked the button on home page 
 if "page" in st.session_state and st.session_state.page == "booking":
@@ -86,6 +88,37 @@ if st.button("Submit Booking Request"):
     else:
         st.success(f"🎉 Thank you! Your booking request for {event_date} from {start_time} to {end_time} has been received.")
 
+         # Build booking data dictionary
+        booking_data = {
+            "name": f"{customer_firstname} {customer_lastname}",
+            "email": customer_email,
+            "phone": customer_phone,
+            "date": str(event_date),
+            "start_time": str(start_time),
+            "end_time": str(end_time),
+            "location": location,
+            "face_painters": num_painters,
+            "balloon_twisters": num_balloon,
+            "glitter_tattoo_artists": num_glitter,
+            "total_workers": num_workers,
+            "hours": duration_hours,
+            "total_price": total_price,
+            "deposit": deposit,
+            "status": "pending"
+        }
+        # Save booking into a JSON file
+        import json
+        if not os.path.exists("bookings.json"):
+            with open("bookings.json", "w") as f:
+                json.dump([], f)
+
+        with open("bookings.json", "r") as f:
+            bookings = json.load(f)
+
+        bookings.append(booking_data)
+
+        with open("bookings.json", "w") as f:
+            json.dump(bookings, f, indent=4)
         #email content for admin
         admin_content = f"""
         NEW BOOKING REQUEST
@@ -109,6 +142,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
