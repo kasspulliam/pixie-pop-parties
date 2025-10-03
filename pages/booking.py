@@ -28,7 +28,7 @@ def send_email(to_email, subject, content):
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.loging(SENDER_EMAIL, APP_PASSWORD)
+            smtp.login(SENDER_EMAIL, APP_PASSWORD)
             smtp.send_message(msg)
     except Exception as e:
         st.error(f"Error sending email: {e}")
@@ -110,6 +110,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
