@@ -62,7 +62,7 @@ if not pending:
     st.info("No pending booking requests 🎉")
 else:
     for idx, booking in enumerate(pending):
-        with st.expander(f"{booking['date']} - {booking['first_name']} {booking['last_name']}"):
+        with st.expander(f"{booking['date']} - {booking['customer_firstname']} {booking['customer_lastname']}"):
             st.write(f"📧 Email: {booking['email']}")
             st.write(f"📞 Phone: {booking['phone']}")
             st.write(f"📍 Location: {booking['location']}")
@@ -79,7 +79,7 @@ else:
                 send_email(
                     booking["email"],
                     "Booking Approved",
-                    f"Hi {booking['first_name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
+                    f"Hi {booking['customer_firstname']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
                 )
                 st.rerun()
 
@@ -89,6 +89,6 @@ else:
             send_email(
                 booking["email"],
                 "Booking Denied",
-                f"Hi {booking['first_name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
+                f"Hi {booking['customer_firstname']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
             )
             st.rerun()
