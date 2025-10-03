@@ -1,5 +1,8 @@
 import streamlit as st
 from datetime import datetime, date, time, timedelta
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import mail
 
 #if the user clicked the button on home page 
 if "page" in st.session_state and st.session_state.page == "booking":
@@ -10,6 +13,24 @@ st.set_page_config(page_title="Pixie Pop Parties Booking", page_icon="🗓️", 
 
 st.title("📅 Book Your Event")
 st.write("Fill out the form below to request your booking.")
+
+#---EMAIL SETUP----
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
+
+def send_email(to_email, subject, contant):
+    message = Mail(
+        from_email=SENDER_EMAIL,
+        to_emails=to_email,
+        subject=subject,
+        plain_text_content=content
+    )
+    try:
+        sg = SendGridAPIClient(SENDGRID_APT_KEY)
+        sg.send(message)
+    except Exception as e:
+        st.error(f"Error sending email: {e}")
 
 # ----- Event Details -----
 st.header("Event Details")
@@ -60,8 +81,31 @@ if st.button("Submit Booking Request"):
         st.error("Please fill out all required fields and select at least one worker.")
     else:
         st.success(f"🎉 Thank you! Your booking request for {event_date} from {start_time} to {end_time} has been received.")
-       
 
-        # Here is where you could add code to send an email or text in the future
+        #email content for admin
+        admin_content = f"""
+        NEW BOOKING REQUEST
+
+        Name: {customer_firstname} {customer_lastname}
+        Email: {customer_email}
+        Phone: {customer_phone}
+        Date: {event_date}
+        Time: {start_time} - {end_time}
+        Location: {location}
+        Face painters: {num_painters}
+        Balloon twisters: {num_balloon}
+        glitter tattoo artists: {num_glitter}
+        total workers: {num_workers}
+        hours: {duration_hours}
+        total price: ${total_price:.2f}
+        deposit: ${deposit:.2f}
+
+        to approve, reply with: APPROVE {customer_email}
+        to deny, reply with: DENY {customer_email}
+        """
+
+        send_email(ADMIN_EMAIL, "New booking request", admin_contnt)
+        st.info("Your request has been sent to the admin for approval. You will receive an email once it is reviewed.")
+
 
 
