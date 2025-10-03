@@ -62,7 +62,7 @@ if not pending:
     st.info("No pending booking requests 🎉")
 else:
     for idx, booking in enumerate(pending):
-        with st.expander(f"{booking['date']} - {booking['first_name']} {booking['last_name']}"):
+        with st.expander(f"{booking['date']} - {booking['customer_firstname']} {booking['customer_lastname']}"):
             st.write(f"📧 Email: {booking['email']}")
             st.write(f"📞 Phone: {booking['phone']}")
             st.write(f"📍 Location: {booking['location']}")
