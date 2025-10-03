@@ -1,8 +1,6 @@
 import streamlit as st
 from datetime import datetime, date, time, timedelta
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 import smtplib
 from email.message import EmailMessage
 
@@ -17,9 +15,9 @@ st.title("📅 Book Your Event")
 st.write("Fill out the form below to request your booking.")
 
 #---EMAIL SETUP----
-SENDER_EMAIL = st.secrets["pixiepopparties@gmail.com"]
-ADMIN_EMAIL = st.secrets["pixiepopparties@gmail.com"]
-APP_PASSWORD = st.secrets["qbhp uuti bizu jytw"]
+SENDER_EMAIL = st.secrets["SENDER_EMAIL"]
+ADMIN_EMAIL = st.secrets["ADMIN_EMAIL"]
+APP_PASSWORD = st.secrets["APP_PASSWORD"]
 
 def send_email(to_email, subject, content):
     msg = EmailMessage()
@@ -28,12 +26,12 @@ def send_email(to_email, subject, content):
     msg['From'] = SENDER_EMAIL
     msg['To'] = to_email
 
-try:
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-        smtp.loging(SENDER_EMAIL, APP_PASSWORD)
-        smtp.send_message(msg)
-except Exception as e:
-    st.error(f"Error sending email: {e}")
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.loging(SENDER_EMAIL, APP_PASSWORD)
+            smtp.send_message(msg)
+    except Exception as e:
+        st.error(f"Error sending email: {e}")
 
 # ----- Event Details -----
 st.header("Event Details")
@@ -112,6 +110,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
