@@ -88,7 +88,7 @@ if st.button("Submit Booking Request"):
     else:
         st.success(f"🎉 Thank you! Your booking request for {event_date} from {start_time} to {end_time} has been received.")
 
-         # Build booking data dictionary
+        # Build booking data dictionary
         booking_data = {
             "name": f"{customer_firstname} {customer_lastname}",
             "email": customer_email,
@@ -163,6 +163,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
