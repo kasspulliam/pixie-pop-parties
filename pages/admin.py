@@ -62,31 +62,34 @@ if not pending:
     st.info("No pending booking requests 🎉")
 else:
     for idx, booking in enumerate(pending):
-        with st.expander(f"{booking['date']} - {booking['customer_firstname']} {booking['customer_lastname']}"):
-            st.write(f"📧 Email: {booking['email']}")
-            st.write(f"📞 Phone: {booking['phone']}")
-            st.write(f"📍 Location: {booking['location']}")
-            st.write(f"👥 Workers: {booking['workers']} (Painters: {booking['painters']}, Balloons: {booking['balloons']}, Glitter: {booking['glitter']})")
-            st.write(f"🕒 Time: {booking['time']}")
-            st.write(f"💰 Total: ${booking['total_price']:.2f}, Deposit: ${booking['deposit']:.2f}")
+    with st.expander(f"{booking['date']} - {booking['first_name']} {booking['last_name']}"):
+        st.write(f"📧 Email: {booking['email']}")
+        st.write(f"📞 Phone: {booking['phone']}")
+        st.write(f"📍 Location: {booking['location']}")
+        st.write(f"👥 Workers: {booking['total_workers']} "
+                 f"(Painters: {booking['face_painters']}, "
+                 f"Balloons: {booking['balloon_twisters']}, "
+                 f"Glitter: {booking['glitter_tattoos']})")
+        st.write(f"🕒 Time: {booking['start_time']} - {booking['end_time']}")
+        st.write(f"💰 Total: ${booking['total_price']:.2f}, Deposit: ${booking['deposit']:.2f}")
 
-            col1, col2 = st.columns(2)
-            if col1.button("✅ Approve", key=f"approve_{idx}"):
-                booking["status"] = "approved"
-                save_bookings(bookings)
-                send_email(
-                    booking["email"],
-                    "Booking Approved",
-                    f"Hi {booking['first_name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
-                )
-                st.rerun()
+        col1, col2 = st.columns(2)
+        if col1.button("✅ Approve", key=f"approve_{idx}"):
+            booking["status"] = "approved"
+            save_bookings(bookings)
+            send_email(
+                booking["email"],
+                "Booking Approved",
+                f"Hi {booking['first_name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
+            )
+            st.rerun()
 
-            if col2.button("❌ Deny", key=f"deny_{idx}"):
-                booking["status"] = "denied"
-                save_bookings(bookings)
-                send_email(
-                    booking["email"],
-                    "Booking Denied",
-                    f"Hi {booking['first_name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
-                )
-                st.rerun()
+        if col2.button("❌ Deny", key=f"deny_{idx}"):
+            booking["status"] = "denied"
+            save_bookings(bookings)
+            send_email(
+                booking["email"],
+                "Booking Denied",
+                f"Hi {booking['first_name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
+            )
+            st.rerun()
