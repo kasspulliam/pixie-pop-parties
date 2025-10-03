@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime, date, time, timedelta
 import os
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import mail
+from sendgrid.helpers.mail import Mail
 
 #if the user clicked the button on home page 
 if "page" in st.session_state and st.session_state.page == "booking":
@@ -106,6 +106,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, "New booking request", admin_content)
         st.info("Your request has been sent to the admin for approval. You will receive an email once it is reviewed.")
+
 
 
 
