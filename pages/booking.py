@@ -111,6 +111,27 @@ if st.button("Submit Booking Request"):
         if not os.path.exists("bookings.json"):
             with open("bookings.json", "w") as f:
                 json.dump([], f)
+        # Save the booking into session_state
+        if "bookings" not in st.session_state:
+            st.session_state["bookings"] = []
+
+        st.session_state["bookings"].append({
+            "date": str(event_date),
+            "start_time": str(start_time),
+            "end_time": str(end_time),
+            "location": location,
+            "description": event_desc,
+            "first_name": customer_firstname,
+            "last_name": customer_lastname,
+            "email": customer_email,
+            "phone": customer_phone,
+            "face_painters": num_painters,
+            "balloon_twisters": num_balloon,
+            "glitter_tattoos": num_glitter,
+            "total_price": total_price,
+            "deposit": deposit,
+            "status": "pending"
+        })
 
         with open("bookings.json", "r") as f:
             bookings = json.load(f)
@@ -142,6 +163,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
