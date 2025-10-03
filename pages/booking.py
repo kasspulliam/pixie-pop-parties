@@ -3,6 +3,8 @@ from datetime import datetime, date, time, timedelta
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import smtplib
+from email.message import EmailMessage
 
 #if the user clicked the button on home page 
 if "page" in st.session_state and st.session_state.page == "booking":
@@ -15,22 +17,23 @@ st.title("📅 Book Your Event")
 st.write("Fill out the form below to request your booking.")
 
 #---EMAIL SETUP----
-SENDGRID_API_KEY = st.secrets["SENDGRID_API_KEY"]
-SENDER_EMAIL = st.secrets["SENDER_EMAIL"]
-ADMIN_EMAIL = st.secrets["ADMIN_EMAIL"]
+SENDER_EMAIL = st.secrets["pixiepopparties@gmail.com"]
+ADMIN_EMAIL = st.secrets["pixiepopparties@gmail.com"]
+APP_PASSWORD = st.secrets["qbhp uuti bizu jytw"]
 
 def send_email(to_email, subject, content):
-    message = Mail(
-        from_email=SENDER_EMAIL,
-        to_emails=to_email,
-        subject=subject,
-        plain_text_content=content
-    )
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        sg.send(message)
-    except Exception as e:
-        st.error(f"Error sending email: {e}")
+    msg = EmailMessage()
+    msg.set_content(content)
+    msg['Subject'] = subject
+    msg['From'] = SENDER_EMAIL
+    msg['To'] = to_email
+
+try:
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.loging(SENDER_EMAIL, APP_PASSWORD)
+        smtp.send_message(msg)
+except Exception as e:
+    st.error(f"Error sending email: {e}")
 
 # ----- Event Details -----
 st.header("Event Details")
@@ -109,6 +112,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
