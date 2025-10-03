@@ -15,9 +15,9 @@ st.title("📅 Book Your Event")
 st.write("Fill out the form below to request your booking.")
 
 #---EMAIL SETUP----
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
+SENDGRID_API_KEY = st.secrets["SENDGRID_API_KEY"]
+SENDER_EMAIL = st.secrets["SENDER_EMAIL"]
+ADMIN_EMAIL = st.secrets["ADMIN_EMAIL"]
 
 def send_email(to_email, subject, content):
     message = Mail(
@@ -109,6 +109,7 @@ if st.button("Submit Booking Request"):
 
         send_email(ADMIN_EMAIL, 'New booking request', admin_content)
         st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
