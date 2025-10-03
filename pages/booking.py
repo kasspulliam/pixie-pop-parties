@@ -104,8 +104,9 @@ if st.button("Submit Booking Request"):
         to deny, reply with: DENY {customer_email}
         """
 
-        send_email(ADMIN_EMAIL, "New booking request", admin_content)
-        st.info("Your request has been sent to the admin for approval. You will receive an email once it is reviewed.")
+        send_email(ADMIN_EMAIL, 'New booking request', admin_content)
+        st.info('Your request has been sent to the admin for approval. You will receive an email once it is reviewed.')
+
 
 
 
