@@ -83,12 +83,12 @@ else:
                 )
                 st.rerun()
 
-         if col2.button("❌ Deny", key=f"deny_{idx}"):
-             booking["status"] = "denied"
-             save_bookings(bookings)
-             send_email(
-                 booking["email"],
-                 "Booking Denied",
-                 f"Hi {booking['first_name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
+        if col2.button("❌ Deny", key=f"deny_{idx}"):
+            booking["status"] = "denied"
+            save_bookings(bookings)
+            send_email(
+                booking["email"],
+                "Booking Denied",
+                f"Hi {booking['first_name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
             )
             st.rerun()
