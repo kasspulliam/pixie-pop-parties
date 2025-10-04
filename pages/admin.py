@@ -146,14 +146,12 @@ else:
              )
             st.rerun()
         #indent marker for button 
-        if col3.button("Delete", key=f"delete_{day}_{event_idx}"):
-            main_idx = next(
-                (i for i, b in enumerate(bookings) 
-                if b["date"] == event["date"] 
-                and b["name"] == event["name"] 
-                and b["start_time"] == event["start_time"]), 
-               None
-        )
+        if col3.button("🗑️ Delete", key=f"delete_pending_{idx}"):
+            bookings.pop(idx)
+            save_bookings(bookings)
+            st.success(f"Deleted pending booking {booking['name']} on {booking['date']}")
+            st.rerun()
+        
         if main_idx is not None:
             bookings.pop(main_idx)
             save_bookings(bookings)
@@ -254,7 +252,7 @@ for week in month_calendar:
                                 bookings.pop(main_idx)
                                 save_bookings(bookings)
                                 st.success(f"Deleted {evt.get('name','event')} on {evt.get('date')}")
-                                st.experimental_rerun()
+                                st.rerun()
                             else:
                                 st.error("Could not find the booking to delete (it may have changed).")
         else:
