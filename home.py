@@ -39,6 +39,18 @@ unforgettable for kids and adults alike!
 </p>
 """, unsafe_allow_html=True)
 
+#----services------
+st.header("Offered Services🎈🖌️✨")
+st.markdown("""
+<p style='font-size:20px; line-height:1.5;'>
+-Professional Face Painting 🖌️🎨
+-Balloon Twisting 🎈
+-Glitter Tattoos ✨⭐
+
+And we are looking into adding other services like custom banners!
+</p>
+""", unsafe_allow_html=True)
+
 #-----gallery section-----
 st.header("🌌💫Our Gallery")
 
@@ -76,3 +88,4 @@ st.write("""
 5. Sit back and enjoy the party! ✨🪄🥳🦄🎨🎈
 
 """)
+
