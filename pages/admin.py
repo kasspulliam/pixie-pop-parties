@@ -126,5 +126,5 @@ else:
                     total price: {booking[hours]}
                     deposit: {booking[deposit]}
                     """
-            )
+                )
             st.rerun()
