@@ -112,7 +112,8 @@ else:
             send_email(
                 booking["email"],
                 "Booking Denied",
-                f"Hi {booking['name']},\n\nUnfortunately, we cannot accommodate your booking request at this time as we are unavailable on that date/time.
+                f"""
+                Hi {booking['name']},\n\nUnfortunately, we cannot accommodate your booking request at this time as we are unavailable on that date/time.
                  ---Booking Info---
                     date: {booking[date]}
                     start time: {booking[start_time]}
@@ -123,6 +124,7 @@ else:
                     glitter tattoo artists: {booking[glitter_tattoo_artists]}
                     hours: {booking[hours]}
                     total price: {booking[hours]}
-                    deposit: {booking[deposit]}"
+                    deposit: {booking[deposit]}
+                    """
             )
             st.rerun()
