@@ -90,16 +90,16 @@ else:
                     Zelle: (901)674-0885
                     
                     ---Booking Info---
-                    date: {booking[date]}
-                    start time: {booking[start_time]}
-                    end time: {booking[end_time]}
-                    location: {booking[location]}
-                    face painters: {booking[face_painters]}
-                    balloon twisters: {booking[balloon_twisters]}
-                    glitter tattoo artists: {booking[glitter_tattoo_artists]}
-                    hours: {booking[hours]}
-                    total price: {booking[hours]}
-                    deposit: {booking[deposit]}
+                    date: {booking['date']}
+                    start time: {booking['start_time']}
+                    end time: {booking['end_time']}
+                    location: {booking['location']}
+                    face painters: {booking['face_painters']}
+                    balloon twisters: {booking['balloon_twisters']}
+                    glitter tattoo artists: {booking['glitter_tattoo_artists']}
+                    hours: {booking['hours']}
+                    total price: ${booking['total_price']}
+                    deposit: ${booking['deposit']}
                     
                     Please reach out to pixiepoppartiess@gmail.com or reply to this email if you have any questions!
                     """
@@ -115,16 +115,16 @@ else:
                 f"""
                 Hi {booking['name']},\n\nUnfortunately, we cannot accommodate your booking request at this time as we are unavailable on that date/time.
                  ---Booking Info---
-                    date: {booking[date]}
-                    start time: {booking[start_time]}
-                    end time: {booking[end_time]}
-                    location: {booking[location]}
-                    face painters: {booking[face_painters]}
-                    balloon twisters: {booking[balloon_twisters]}
-                    glitter tattoo artists: {booking[glitter_tattoo_artists]}
-                    hours: {booking[hours]}
-                    total price: {booking[hours]}
-                    deposit: {booking[deposit]}
+                    date: {booking['date']}
+                    start time: {booking['start_time']}
+                    end time: {booking['end_time']}
+                    location: {booking['location']}
+                    face painters: {booking['face_painters']}
+                    balloon twisters: {booking['balloon_twisters']}
+                    glitter tattoo artists: {booking['glitter_tattoo_artists']}
+                    hours: {booking['hours']}
+                    total price: ${booking['total_price']}
+                    deposit: ${booking['deposit']}
                     """
                 )
             st.rerun()
