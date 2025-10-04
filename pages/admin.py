@@ -180,7 +180,7 @@ for week in month_calendar:
     cols = st.columns(7)
     for i, day in enumerate(week):
         if day == 0:
-            cols[i].write("")
+        cols[i].write("")
         else:
             day_str = f"{year}-{month:02d}-{day:02d}"
             day_events = [b for b in approved if b["date"] == day_str]
