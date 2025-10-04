@@ -193,7 +193,7 @@ for week in month_calendar:
             if day == today.day and month == today.month and year == today.year:
                 day_label = f"<div style='background-color:pink; text-align:center; border-radius:5px;'>{day}</div>"
                 cols[i].markdown(day_label, unsafe_allow_html=True)
-                    st.write(f"### Events on {day_str}")
+                st.write(f"### Events on {day_str}")
                     for event_idx, event in enumerate(day_events):
                         with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
                             st.write(f"📍 Location: {event['location']}")
