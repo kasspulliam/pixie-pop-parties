@@ -81,7 +81,7 @@ else:
                     "Booking Approved",
                     f"""
                     Hi {booking['name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm your booking!
-                    "The remaining price total will be due the day of the scheduled event.
+                    The remaining price total will be due the day of the scheduled event.
                     
                     ---Payment methods--- 
                     PayPal: @LadyLady123
