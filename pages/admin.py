@@ -1,8 +1,7 @@
 import streamlit as st
 import json, os
 import smtplib
-from email.message import EmailMessage
-import booking.py 
+from email.message import EmailMessage 
 
 # --- Config ---
 st.set_page_config(page_title="Admin - Manage Bookings", layout="wide")
