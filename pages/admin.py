@@ -152,7 +152,10 @@ if "month_offset" not in st.session_state:
 col1, col2, col3 = st.columns([1,2,1])
 with col1:
     if st.button("<-- previous month"):
-        st.session_state.month_offset += 1
+        st.session_state.month_offset -= 1
+with col3:
+    if st.button("Next Month -->"):
+        st.session_state.moth_offset += 1 
 
 today = datetime.today()
 first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.month_offset*30)
