@@ -89,6 +89,6 @@ else:
             send_email(
                 booking["email"],
                 "Booking Denied",
-                f"Hi {booking['customer_firstname']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
+                f"Hi {booking['name']},\n\nUnfortunately, we cannot accommodate your booking request at this time."
             )
             st.rerun()
