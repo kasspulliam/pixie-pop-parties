@@ -200,7 +200,7 @@ for week in month_calendar:
                             bookings.pop(main_idx)
                             save_bookings(bookings)
                             st.success(f"Deleted {event['name']} on {event['date']}")
-                            st.experimental_rerun()
+                            st.rerun()
 
             # Calendar button for the day
             if day_events:
