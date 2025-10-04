@@ -2,6 +2,8 @@ import streamlit as st
 import json, os
 import smtplib
 from email.message import EmailMessage 
+import calendar
+from datetime import datetime, timedelta
 
 # --- Config ---
 st.set_page_config(page_title="Admin - Manage Bookings", layout="wide")
@@ -57,7 +59,9 @@ st.title("🛠️ Admin - Manage Bookings")
 
 bookings = load_bookings()
 pending = [b for b in bookings if b["status"] == "pending"]
+approved = [b for b in bookings if b["status"] == "approved"]
 
+st.header("Pending Booking Requests")
 if not pending:
     st.info("No pending booking requests 🎉")
 else:
@@ -78,10 +82,11 @@ else:
                 f"Assign worker(s) for {booking['name']} (comma-seperated",
                 key=f"workers_{idx}"
             )
+            
             col1, col2 = st.columns(2)
             if col1.button("✅ Approve", key=f"approve_{idx}"):
                 #split input by commas and strip extra spaces
-                assigned_workers = [name.strip() for name in worker_input.split(",") if name.strip()]
+                assigned_workers = [w.strip() for w in worker_input.split(",") if w.strip()]
                 booking["workers_assiggned"] = assigned_workers
                 booking["status"] = "approved"
                 save_bookings(bookings)
@@ -136,36 +141,45 @@ else:
                     total price: ${booking['total_price']}
                     deposit: ${booking['deposit']}
                     """
-                )
-            st.rerun()
+             )
+             st.rerun()
 
 # --- Calendar view for approved bookings ---
 st.header("📅 Worker Schedule")
+if "month_offset" not in st.session_state:
+    st.session_state.month_offset = 0
 
-# Collect all approved bookings
-approved_bookings = [b for b in bookings if b["status"] == "approved"]
+col1, col2, col3 = st.columns([1,2,1])
+with col1:
+    if st.button("<-- previous month"):
+        st.session_state.month_offset += 1
 
-if not approved_bookings:
-    st.info("No approved bookings yet.")
-else:
-    # Build a dictionary mapping worker -> list of gigs
-    schedule = {}
-    for booking in approved_bookings:
-        workers = booking.get("workers_assiggned", [])  # make sure this key matches what you used above
-        for worker in workers:
-            if worker not in schedule:
-                schedule[worker] = []
-            schedule[worker].append({
-                "date": booking["date"],
-                "time": f"{booking['start_time']} - {booking['end_time']}",
-                "customer": booking["name"],
-                "location": booking["location"]
-            })
+today = datetime.today()
+first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.month_offset*30)
+year = first_day_of_month.year
+month = first_day_of_month.month
+month_name = calendar.month_name[month]
+st.subheader(f"{month_name} {year}")
 
-    # Display schedule
-    for worker, gigs in schedule.items():
-        with st.expander(f"{worker} ({len(gigs)} gigs)"):
-            # Sort gigs by date
-            gigs_sorted = sorted(gigs, key=lambda x: x["date"])
-            for gig in gigs_sorted:
-                st.write(f"📅 {gig['date']} | 🕒 {gig['time']} | 👤 {gig['customer']} | 📍 {gig['location']}")
+month_calendar = calendar.monthcalendar(year, month)
+for week in month_calendar:
+    cols = st.columns(7)
+    for i, day in enumerate(week):
+        if day == 0:
+            cols[i].write("")
+        else:
+            day_str = f"{year}-{month:02d}-{day:02d}"
+            day_events = [b for b in approved if b["date"] == day_str]
+            
+            if day_events:
+                if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events)>1 else ''})", key=f"day_{day}"):
+                    st.write(f"### Events on {day_str}")
+                    for evt in day_events:
+                        st.write(f"**Event:** {evt['name']}")
+                        st.write(f"🕒 {evt['start_time']} - {evt['end_time']}")
+                        st.write(f"📍 Location: {evt['location']}")
+                        st.write(f"👥 Workers: {', '.join(evt.get('workers_assigned', []))}")
+                        st.write(f"💰 Total Price: ${evt['total_price']}")
+                        st.write("---")
+            else:
+                cols[i].button(f"{day}", key=f"day_{day}_empty")
