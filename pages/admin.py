@@ -166,6 +166,8 @@ with col3:
     if st.button("Next Month -->"):
         st.session_state.month_offset += 1 
 
+
+#---calendar---
 today = datetime.today()
 first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.month_offset*30)
 year = first_day_of_month.year
@@ -182,8 +184,9 @@ for week in month_calendar:
         else:
             day_str = f"{year}-{month:02d}-{day:02d}"
             day_events = [b for b in approved if b["date"] == day_str]
-            #delete button
-            for event_idx, event in enumerate(events_for_day):
+
+            # Loop through events for this day
+            for event_idx, event in enumerate(day_events):
                 with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
                     st.write(f"📍 Location: {event['location']}")
                     st.write(f"👥 Workers: {', '.join(event.get('workers_assigned', []))}")
@@ -191,18 +194,17 @@ for week in month_calendar:
                     st.write(f"📌 Status: {event['status']}")
 
                     col1, col2 = st.columns(2)
-
                     if col1.button("🗑️ Delete", key=f"delete_{day}_{event_idx}"):
-            # Find the index of this event in the main bookings list
                         main_idx = next((i for i, b in enumerate(bookings) if b == event), None)
                         if main_idx is not None:
                             bookings.pop(main_idx)
                             save_bookings(bookings)
                             st.success(f"Deleted {event['name']} on {event['date']}")
                             st.experimental_rerun()
-            #end delete button
+
+            # Calendar button for the day
             if day_events:
-                if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events)>1 else ''})", key=f"day_{day}"):
+                if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events) > 1 else ''})", key=f"day_{day}"):
                     st.write(f"### Events on {day_str}")
                     for evt in day_events:
                         st.write(f"**Event:** {evt['name']}")
