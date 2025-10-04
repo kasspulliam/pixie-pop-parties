@@ -145,12 +145,19 @@ else:
                     """
              )
             st.rerun()
-
-        if col3.button("Delete", key=f"delete_{idx}"):
-            #remove the booking from the list completely 
-            bookings.pop(idx)
+        #indent marker for button 
+        if col3.button("Delete", key=f"delete_{day}_{event_idx}"):
+            main_idx = next(
+                (i for i, b in enumerate(bookings) 
+                if b["date"] == event["date"] 
+                and b["name"] == event["name"] 
+                and b["start_time"] == event["start_time"]), 
+               None
+        )
+        if main_idx is not None:
+            bookings.pop(main_idx)
             save_bookings(bookings)
-            st.success("Booking deleted!")
+            st.success(f"Deleted {event['name']} on {event['date']}")
             st.rerun()
 
 # --- Calendar view for approved bookings ---
