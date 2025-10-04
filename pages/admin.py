@@ -154,26 +154,32 @@ else:
             st.rerun()
 
 # --- Calendar view for approved bookings ---
-st.header("📅 Worker Schedule")
+st.header("📅 Schedule")
+# ensure month_offset exists
 if "month_offset" not in st.session_state:
-    st.session_state.month_offset = 0
+    st.session_state["month_offset"] = 0
 
-col1, col2, col3 = st.columns([1,2,1])
-with col1:
-    if st.button("<-- previous month"):
+# navigation buttons (previous / next month)
+nav_col1, nav_col2, nav_col3 = st.columns([1,6,1])
+with nav_col1:
+    if st.button("⬅ Previous Month"):
         st.session_state.month_offset -= 1
-with col3:
-    if st.button("Next Month -->"):
-        st.session_state.month_offset += 1 
+with nav_col3:
+    if st.button("Next Month ➡"):
+        st.session_state.month_offset += 1
 
-
-# --- Calendar ---
+# compute month/year correctly from offset
 today = datetime.today()
-first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.get("month_offset", 0)*30)
-year = first_day_of_month.year
-month = first_day_of_month.month
+offset = st.session_state.get("month_offset", 0)
+# compute year/month by moving months, not by adding 30 days
+month = (today.month - 1 + offset) % 12 + 1
+year = today.year + ((today.month - 1 + offset) // 12)
 month_name = calendar.month_name[month]
 st.subheader(f"{month_name} {year}")
+
+# recompute approved bookings from the master bookings list (in case it changed)
+bookings = load_bookings()
+approved = [b for b in bookings if b.get("status") == "approved"]
 
 month_calendar = calendar.monthcalendar(year, month)
 
@@ -181,37 +187,68 @@ for week in month_calendar:
     cols = st.columns(7)
     for i, day in enumerate(week):
         if day == 0:
-            cols[i].write("")
+            cols[i].write("")  # empty cell
             continue
 
+        # build day string like "2025-10-03"
         day_str = f"{year}-{month:02d}-{day:02d}"
-        day_events = [b for b in approved if b["date"] == day_str]
+        day_events = [b for b in approved if b.get("date") == day_str]
 
-        # Highlight today separately
-        if day == today.day and month == today.month and year == today.year:
+        # render day number, highlight today in pink
+        is_today = (day == today.day and month == today.month and year == today.year)
+        if is_today:
             cols[i].markdown(
-                f"<div style='background-color:pink; text-align:center; border-radius:5px; padding:4px;'>{day}</div>",
+                f"<div style='background-color:pink; text-align:center; border-radius:6px; padding:6px;'>{day}</div>",
                 unsafe_allow_html=True
             )
         else:
             cols[i].write(f"{day}")
 
-        # Show button with events
+        # if there are events, show a small button that opens the day's events
         if day_events:
-            if cols[i].button(f"{len(day_events)} event{'s' if len(day_events)>1 else ''}", key=f"day_{day}"):
+            label = f"{len(day_events)} event{'s' if len(day_events) > 1 else ''}"
+            # clicking this renders the event list below the calendar (Streamlit will rerun)
+            if cols[i].button(label, key=f"day_{year}_{month}_{day}"):
                 st.write(f"### Events on {day_str}")
-                for event_idx, event in enumerate(day_events):
-                    with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
-                        st.write(f"📍 Location: {event['location']}")
-                        st.write(f"👥 Workers: {', '.join(event.get('workers_assigned', []))}")
-                        st.write(f"💰 Total: ${event['total_price']:.2f}, Deposit: ${event['deposit']:.2f}")
-                        st.write(f"📌 Status: {event['status']}")
+                for evt_idx, evt in enumerate(day_events):
+                    with st.expander(f"{evt.get('start_time', '')} - {evt.get('end_time','')}: {evt.get('name','(no name)')}"):
+                        st.write(f"📍 Location: {evt.get('location','')}")
+                        st.write(f"👥 Workers: {', '.join(evt.get('workers_assigned', [])) if evt.get('workers_assigned') else 'None assigned'}")
+                        st.write(f"💰 Total: ${evt.get('total_price',0):.2f}, Deposit: ${evt.get('deposit',0):.2f}")
+                        st.write(f"📌 Status: {evt.get('status','')}")
+                        st.write("---")
 
-                        col1, col2 = st.columns(2)
-                        if col1.button("🗑️ Delete", key=f"delete_{day}_{event_idx}"):
-                            main_idx = next((i for i, b in enumerate(bookings) if b == event), None)
+                        # Reliable delete: find booking by a set of stable fields (fallback to equality)
+                        def find_booking_index(target):
+                            # prefer unique id if present
+                            if target.get("id"):
+                                for idx, b in enumerate(bookings):
+                                    if b.get("id") == target.get("id"):
+                                        return idx
+                            # otherwise match on combination of fields (date, start_time, email, name)
+                            for idx, b in enumerate(bookings):
+                                if (
+                                    b.get("date") == target.get("date") and
+                                    b.get("start_time") == target.get("start_time") and
+                                    b.get("email") == target.get("email") and
+                                    b.get("name") == target.get("name")
+                                ):
+                                    return idx
+                            # last resort: exact dict match
+                            for idx, b in enumerate(bookings):
+                                if b == target:
+                                    return idx
+                            return None
+
+                        col_del, col_blank = st.columns([1,3])
+                        if col_del.button("🗑️ Delete", key=f"delete_{day}_{evt_idx}"):
+                            main_idx = find_booking_index(evt)
                             if main_idx is not None:
                                 bookings.pop(main_idx)
                                 save_bookings(bookings)
-                                st.success(f"Deleted {event['name']} on {event['date']}")
+                                st.success(f"Deleted {evt.get('name','event')} on {evt.get('date')}")
                                 st.experimental_rerun()
+                            else:
+                                st.error("Could not find the booking to delete (it may have changed).")
+        else:
+            cols[i].button("", key=f"day_{year}_{month}_{day}_empty")  # placeholder for alignment
