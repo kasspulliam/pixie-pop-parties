@@ -182,31 +182,35 @@ for week in month_calendar:
     for i, day in enumerate(week):
         if day == 0:
             cols[i].write("")
+            continue
+
+        day_str = f"{year}-{month:02d}-{day:02d}"
+        day_events = [b for b in approved if b["date"] == day_str]
+
+        # Highlight today
+        if day == today.day and month == today.month and year == today.year:
+            day_label = f"<div style='background-color:pink; text-align:center; border-radius:5px;'>{day}</div>"
         else:
-            day_str = f"{year}-{month:02d}-{day:02d}"
-            day_events = [b for b in approved if b["date"] == day_str]
+            day_label = str(day)
 
-            # Highlight today
-            if day == today.day and month == today.month and year == today.year:
-                day_label = f"<div style='background-color:pink; text-align:center; border-radius:5px;'>{day}</div>"
-                cols[i].markdown(day_label, unsafe_allow_html=True)
-            elif day_events:
-                if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events)>1 else ''})", key=f"day_{day}"):
-                    st.write(f"### Events on {day_str}")
-                    for event_idx, event in enumerate(day_events):
-                        with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
-                            st.write(f"📍 Location: {event['location']}")
-                            st.write(f"👥 Workers: {', '.join(event.get('workers_assigned', []))}")
-                            st.write(f"💰 Total: ${event['total_price']:.2f}, Deposit: ${event['deposit']:.2f}")
-                            st.write(f"📌 Status: {event['status']}")
+        # Show button with number of events
+        if day_events:
+            if cols[i].button(f"{day_label} ({len(day_events)} event{'s' if len(day_events)>1 else ''})", key=f"day_{day}"):
+                st.write(f"### Events on {day_str}")
+                for event_idx, event in enumerate(day_events):
+                    with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
+                        st.write(f"📍 Location: {event['location']}")
+                        st.write(f"👥 Workers: {', '.join(event.get('workers_assigned', []))}")
+                        st.write(f"💰 Total: ${event['total_price']:.2f}, Deposit: ${event['deposit']:.2f}")
+                        st.write(f"📌 Status: {event['status']}")
 
-                            col1, col2 = st.columns(2)
-                            if col1.button("🗑️ Delete", key=f"delete_{day}_{event_idx}"):
-                                main_idx = next((i for i, b in enumerate(bookings) if b == event), None)
-                                if main_idx is not None:
-                                    bookings.pop(main_idx)
-                                    save_bookings(bookings)
-                                    st.success(f"Deleted {event['name']} on {event['date']}")
-                                    st.experimental_rerun()
-            else:
-                cols[i].button(f"{day}", key=f"day_{day}_empty")
+                        col1, col2 = st.columns(2)
+                        if col1.button("🗑️ Delete", key=f"delete_{day}_{event_idx}"):
+                            main_idx = next((i for i, b in enumerate(bookings) if b == event), None)
+                            if main_idx is not None:
+                                bookings.pop(main_idx)
+                                save_bookings(bookings)
+                                st.success(f"Deleted {event['name']} on {event['date']}")
+                                st.experimental_rerun()
+        else:
+            cols[i].button(day_label, key=f"day_{day}_empty")
