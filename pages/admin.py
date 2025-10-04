@@ -69,7 +69,7 @@ else:
             st.write(f"👥 Workers: {booking['total_workers']} "
                      f"(Painters: {booking['face_painters']}, "
                      f"Balloons: {booking['balloon_twisters']}, "
-                     f"Glitter: {booking['glitter_tattoos']})")
+                     f"Glitter: {booking['glitter_tattoo_artists']})")
             st.write(f"🕒 Time: {booking['start_time']} - {booking['end_time']}")
             st.write(f"💰 Total: ${booking['total_price']:.2f}, Deposit: ${booking['deposit']:.2f}")
             col1, col2 = st.columns(2)
@@ -79,7 +79,7 @@ else:
                 send_email(
                     booking["email"],
                     "Booking Approved",
-                    f"Hi {booking['customer_firstname']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
+                    f"Hi {booking['name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm."
                 )
                 st.rerun()
 
