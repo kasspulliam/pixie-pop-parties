@@ -72,10 +72,20 @@ else:
                      f"Glitter: {booking['glitter_tattoo_artists']})")
             st.write(f"🕒 Time: {booking['start_time']} - {booking['end_time']}")
             st.write(f"💰 Total: ${booking['total_price']:.2f}, Deposit: ${booking['deposit']:.2f}")
+
+            #text input for workers names
+            worker_input = st.text_input(
+                f"Assign worker(s) for {booking['name']} (comma-seperated",
+                key=f"workers_{idx}"
+            )
             col1, col2 = st.columns(2)
             if col1.button("✅ Approve", key=f"approve_{idx}"):
+                #split input by commas and strip extra spaces
+                assigned_workers = [name.strip() for name in worker_input.split(",") if name.strip()]
+                booking["workers_assiggned"] = assigned_workers
                 booking["status"] = "approved"
                 save_bookings(bookings)
+                
                 send_email(
                     booking["email"],
                     "Booking Approved",
