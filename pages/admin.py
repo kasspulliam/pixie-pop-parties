@@ -79,8 +79,9 @@ else:
                 send_email(
                     booking["email"],
                     "Booking Approved",
-                    f"Hi {booking['name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm your booking!
-                    The remaining price total will be due the day of the scheduled event.
+                    f"""
+                    Hi {booking['name']},\n\nYour booking has been APPROVED! Please pay your deposit to confirm your booking!
+                    "The remaining price total will be due the day of the scheduled event.
                     
                     ---Payment methods--- 
                     PayPal: @LadyLady123
@@ -100,7 +101,8 @@ else:
                     total price: {booking[hours]}
                     deposit: {booking[deposit]}
                     
-                    Please reach out to pixiepoppartiess@gmail.com or reply to this email if you have any questions!"
+                    Please reach out to pixiepoppartiess@gmail.com or reply to this email if you have any questions!
+                    """
                 )
                 st.rerun()
 
