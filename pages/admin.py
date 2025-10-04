@@ -186,8 +186,9 @@ for week in month_calendar:
             day_events = [b for b in approved if b["date"] == day_str]
 
             # Calendar button for the day
-            if day_events:
-                if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events) > 1 else ''})", key=f"day_{day}"):
+            if day == today.day and month == today.month and year == today.year:
+                day_label = f"<div style='background-color:pink; text-align:center; border-radius:5px;'>{day}</div>"
+                cols[i].markdown(day_label, unsafe_allow_html=True)
                     st.write(f"### Events on {day_str}")
                     for event_idx, event in enumerate(day_events):
                         with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
@@ -204,5 +205,8 @@ for week in month_calendar:
                                     save_bookings(bookings)
                                     st.success(f"Deleted {event['name']} on {event['date']}")
                                     st.rerun()
+            else:
+                if day_events:
+                    if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events) > 1 else ''})", key=f"day_{day}"):
             else:
                 cols[i].button(f"{day}", key=f"day_{day}_empty")
