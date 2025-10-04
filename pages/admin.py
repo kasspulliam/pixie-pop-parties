@@ -138,3 +138,34 @@ else:
                     """
                 )
             st.rerun()
+
+# --- Calendar view for approved bookings ---
+st.header("📅 Worker Schedule")
+
+# Collect all approved bookings
+approved_bookings = [b for b in bookings if b["status"] == "approved"]
+
+if not approved_bookings:
+    st.info("No approved bookings yet.")
+else:
+    # Build a dictionary mapping worker -> list of gigs
+    schedule = {}
+    for booking in approved_bookings:
+        workers = booking.get("workers_assiggned", [])  # make sure this key matches what you used above
+        for worker in workers:
+            if worker not in schedule:
+                schedule[worker] = []
+            schedule[worker].append({
+                "date": booking["date"],
+                "time": f"{booking['start_time']} - {booking['end_time']}",
+                "customer": booking["name"],
+                "location": booking["location"]
+            })
+
+    # Display schedule
+    for worker, gigs in schedule.items():
+        with st.expander(f"{worker} ({len(gigs)} gigs)"):
+            # Sort gigs by date
+            gigs_sorted = sorted(gigs, key=lambda x: x["date"])
+            for gig in gigs_sorted:
+                st.write(f"📅 {gig['date']} | 🕒 {gig['time']} | 👤 {gig['customer']} | 📍 {gig['location']}")
