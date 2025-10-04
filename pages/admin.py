@@ -155,7 +155,7 @@ with col1:
         st.session_state.month_offset -= 1
 with col3:
     if st.button("Next Month -->"):
-        st.session_state.moth_offset += 1 
+        st.session_state.month_offset += 1 
 
 today = datetime.today()
 first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.month_offset*30)
