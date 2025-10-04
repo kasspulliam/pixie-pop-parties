@@ -167,15 +167,16 @@ with col3:
         st.session_state.month_offset += 1 
 
 
-#---calendar---
+# --- Calendar ---
 today = datetime.today()
-first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.month_offset*30)
+first_day_of_month = datetime(today.year, today.month, 1) + timedelta(days=st.session_state.get("month_offset", 0)*30)
 year = first_day_of_month.year
 month = first_day_of_month.month
 month_name = calendar.month_name[month]
 st.subheader(f"{month_name} {year}")
 
 month_calendar = calendar.monthcalendar(year, month)
+
 for week in month_calendar:
     cols = st.columns(7)
     for i, day in enumerate(week):
@@ -184,15 +185,14 @@ for week in month_calendar:
         else:
             day_str = f"{year}-{month:02d}-{day:02d}"
             day_events = [b for b in approved if b["date"] == day_str]
-            #highlight today 
+
+            # Highlight today
             if day == today.day and month == today.month and year == today.year:
                 day_label = f"<div style='background-color:pink; text-align:center; border-radius:5px;'>{day}</div>"
                 cols[i].markdown(day_label, unsafe_allow_html=True)
-
-            else:
-                if day_event:
-                    if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events)>1 else ''})", key=f"day_{day}"):
-                        st.write(f"### Events on {day_str}")
+            elif day_events:
+                if cols[i].button(f"{day} ({len(day_events)} event{'s' if len(day_events)>1 else ''})", key=f"day_{day}"):
+                    st.write(f"### Events on {day_str}")
                     for event_idx, event in enumerate(day_events):
                         with st.expander(f"{event['start_time']} - {event['end_time']}: {event['name']}"):
                             st.write(f"📍 Location: {event['location']}")
@@ -207,6 +207,6 @@ for week in month_calendar:
                                     bookings.pop(main_idx)
                                     save_bookings(bookings)
                                     st.success(f"Deleted {event['name']} on {event['date']}")
-                                    st.rerun()
+                                    st.experimental_rerun()
             else:
                 cols[i].button(f"{day}", key=f"day_{day}_empty")
