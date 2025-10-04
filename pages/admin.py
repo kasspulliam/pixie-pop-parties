@@ -76,6 +76,8 @@ else:
                      f"Glitter: {booking['glitter_tattoo_artists']})")
             st.write(f"🕒 Time: {booking['start_time']} - {booking['end_time']}")
             st.write(f"💰 Total: ${booking['total_price']:.2f}, Deposit: ${booking['deposit']:.2f}")
+            st.write(f" Status: {booking['status']}")
+            
 
             #text input for workers names
             worker_input = st.text_input(
@@ -83,7 +85,7 @@ else:
                 key=f"workers_{idx}"
             )
             
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
             if col1.button("✅ Approve", key=f"approve_{idx}"):
                 #split input by commas and strip extra spaces
                 assigned_workers = [w.strip() for w in worker_input.split(",") if w.strip()]
@@ -142,6 +144,13 @@ else:
                     deposit: ${booking['deposit']}
                     """
              )
+            st.rerun()
+
+        if col3.button("Delete", key=f"delete_{idx}"):
+            #remove the booking from the list completely 
+            bookings.pop(idx)
+            save_bookings(bookings)
+            st.success("Booking deleted!")
             st.rerun()
 
 # --- Calendar view for approved bookings ---
