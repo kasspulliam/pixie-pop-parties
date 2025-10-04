@@ -142,7 +142,7 @@ else:
                     deposit: ${booking['deposit']}
                     """
              )
-             st.rerun()
+            st.rerun()
 
 # --- Calendar view for approved bookings ---
 st.header("📅 Worker Schedule")
